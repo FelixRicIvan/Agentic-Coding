@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>經典俄羅斯方塊</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 使用現代化字型 -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="game-container">
+    <div class="left-panel">
+      <h1>TETRIS</h1>
+      <div class="score-board">
+        <p>分數</p>
+        <div id="score">0</div>
+      </div>
+      <div class="score-board">
+        <p>行數</p>
+        <div id="lines">0</div>
+      </div>
+      <div class="score-board">
+        <p>等級</p>
+        <div id="level">1</div>
+      </div>
+    </div>
+    
+    <div class="canvas-container">
+      <canvas id="game" width="300" height="600"></canvas>
+      <div id="game-over" class="hidden">
+        <h2>GAME OVER</h2>
+        <button id="restart-btn">重新開始</button>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="next-piece-container">
+        <p>下一個</p>
+        <canvas id="next-piece" width="120" height="120"></canvas>
+      </div>
+      
+      <div class="controls-help">
+        <h3>控制方式</h3>
+        <ul>
+          <li><span>← →</span> 左右移動</li>
+          <li><span>↓</span> 加速下落</li>
+          <li><span>↑</span> 右轉 (順時針)</li>
+          <li><span>Z</span> 左轉 (逆時針)</li>
+          <li><span>空白鍵</span> 直接下落</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
