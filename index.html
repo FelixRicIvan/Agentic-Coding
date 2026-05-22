@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FelixRicIvan | GitHub Portfolio</title>
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="FelixRicIvan's personal developer portfolio showcasing GitHub repositories, open-source projects, and technical skills. Built with modern glassmorphism design.">
+    <meta name="keywords" content="FelixRicIvan, GitHub, Portfolio, Developer, Web Development, Machine Learning, AI">
+    <!-- Google Fonts: Outfit for headings, Inter for body, Fira Code for mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(99, 102, 241, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary-glow: rgba(139, 92, 246, 0.15);
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-indigo: #6366f1;
+            
+            /* Language Colors */
+            --lang-js: #f1e05a;
+            --lang-jupyter: #da5b0b;
+            --lang-css: #563d7c;
+            --lang-php: #4f5d95;
+            --lang-html: #e34c26;
+            --lang-git: #f1502f;
+            --lang-default: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Premium Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+        }
+
+        .glow-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        .glow-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.1); }
+            100% { transform: translate(-20px, 50px) scale(0.9); }
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Profile Header */
+        header {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo), var(--accent-purple));
+        }
+
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #1f2937;
+            border: 3px solid #0d1117;
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .profile-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.2s;
+        }
+
+        .profile-handle:hover {
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .profile-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-hover-border);
+        }
+
+        .stat-icon {
+            color: var(--accent-indigo);
+            margin-bottom: 8px;
+            display: inline-flex;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Main Section Controls */
+        .controls-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-sort-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            min-width: 280px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px 16px 14px 48px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .sort-box {
+            min-width: 180px;
+        }
+
+        .sort-select {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+            transition: all 0.3s;
+        }
+
+        .sort-select:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--text-muted);
+        }
+
+        .chip.active {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .chip-count {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Repositories Grid */
+        .repos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            min-height: 200px;
+        }
+
+        /* Repository Card */
+        .repo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .repo-card:hover::before {
+            opacity: 1;
+        }
+
+        .repo-header {
+            margin-bottom: 16px;
+        }
+
+        .repo-title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .repo-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .repo-title:hover {
+            color: var(--accent-cyan);
+        }
+
+        .repo-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: capitalize;
+        }
+
+        .repo-desc {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 4.5em; /* Fallback for older browsers */
+        }
+
+        .repo-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        .repo-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .repo-lang {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .repo-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .repo-stat i {
+            font-size: 0.9rem;
+        }
+
+        .repo-date {
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Mode Badges & Status */
+        .source-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .source-status.fallback {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* Skeleton Loading State */
+        .skeleton-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px;
+            height: 236px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skeleton-item {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+            background-size: 200% 100%;
+            animation: loading-shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-text {
+            height: 14px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text.short {
+            width: 80%;
+            margin-bottom: 24px;
+        }
+
+        .skeleton-footer {
+            height: 16px;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            margin-top: auto;
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            color: var(--accent-indigo);
+        }
+
+        .empty-state h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-wrapper {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            .profile-details {
+                justify-content: center;
+            }
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            header {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background Lighting -->
+    <div class="ambient-bg">
+        <div class="glow-circle glow-1"></div>
+        <div class="glow-circle glow-2"></div>
+        <div class="glow-circle glow-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Profile Header Card -->
+        <header id="profile-card">
+            <div class="source-status" id="source-badge">
+                <i data-lucide="wifi"></i>
+                <span id="source-text">Live Mode</span>
+            </div>
+            <div class="profile-wrapper">
+                <div class="avatar-container">
+                    <img id="user-avatar" src="https://avatars.githubusercontent.com/u/29918435?v=4" alt="FelixRicIvan Avatar" class="avatar">
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name" id="user-name">FelixRicIvan</h1>
+                    <a href="https://github.com/FelixRicIvan" target="_blank" class="profile-handle" id="user-handle">
+                        <i data-lucide="github" style="width: 16px; height: 16px;"></i> @FelixRicIvan
+                    </a>
+                    <p class="profile-bio" id="user-bio">Creating and exploring the future of software development through AI, Web Technologies, and Machine Learning.</p>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                            <span id="user-location">Taiwan</span>
+                        </div>
+                        <div class="detail-item">
+                            <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                            <a href="https://github.com/FelixRicIvan" target="_blank" style="color: inherit; text-decoration: none;" id="user-blog">github.com/FelixRicIvan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <section class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="folder-git-2" style="width: 24px; height: 24px;"></i></div>
+                <div class="stat-value" id="stat-repos">10</div>
+                <div class="stat-label">Total Repositories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="star" style="width: 24px; height: 24px;"></i></div>
+                <div class="stat-value" id="stat-stars">0</div>
+                <div class="stat-label">Stars Received</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="git-fork" style="width: 24px; height: 24px;"></i></div>
+                <div class="stat-value" id="stat-forks">0</div>
+                <div class="stat-label">Forks Created</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="code" style="width: 24px; height: 24px;"></i></div>
+                <div class="stat-value" id="stat-lang-count">5</div>
+                <div class="stat-label">Languages Used</div>
+            </div>
+        </section>
+
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <div class="search-sort-bar">
+                <div class="search-box">
+                    <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search repositories by name or keyword...">
+                </div>
+                <div class="sort-box">
+                    <select id="sort-select" class="sort-select">
+                        <option value="updated">Recently Updated</option>
+                        <option value="name">Alphabetical (A-Z)</option>
+                        <option value="stars">Most Stars</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-chips">
+                <span class="filter-label">
+                    <i data-lucide="filter" style="width: 14px; height: 14px;"></i> Filters:
+                </span>
+                <button class="chip active" data-filter="all">
+                    All <span class="chip-count" id="count-all">10</span>
+                </button>
+                <button class="chip" data-filter="Jupyter Notebook">
+                    Jupyter Notebook <span class="chip-count" id="count-jupyter">4</span>
+                </button>
+                <button class="chip" data-filter="JavaScript">
+                    JavaScript <span class="chip-count" id="count-js">1</span>
+                </button>
+                <button class="chip" data-filter="CSS">
+                    CSS <span class="chip-count" id="count-css">1</span>
+                </button>
+                <button class="chip" data-filter="PHP">
+                    PHP <span class="chip-count" id="count-php">1</span>
+                </button>
+                <button class="chip" data-filter="Other">
+                    Others <span class="chip-count" id="count-other">3</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Repositories Grid -->
+        <main class="repos-grid" id="repos-container">
+            <!-- Skeleton cards for loading state -->
+            <div class="skeleton-card">
+                <div class="skeleton-title skeleton-item"></div>
+                <div class="skeleton-text skeleton-item"></div>
+                <div class="skeleton-text short skeleton-item"></div>
+                <div class="skeleton-footer skeleton-item"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-title skeleton-item"></div>
+                <div class="skeleton-text skeleton-item"></div>
+                <div class="skeleton-text short skeleton-item"></div>
+                <div class="skeleton-footer skeleton-item"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-title skeleton-item"></div>
+                <div class="skeleton-text skeleton-item"></div>
+                <div class="skeleton-text short skeleton-item"></div>
+                <div class="skeleton-footer skeleton-item"></div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 FelixRicIvan. Designed with <i data-lucide="heart" style="width: 12px; height: 12px; display: inline-flex; color: #ef4444; fill: #ef4444;"></i> using Glassmorphism.</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">Powered by GitHub Pages | Managed via <a href="https://github.com/FelixRicIvan/AgentCoding" target="_blank">AgentCoding</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // High quality static fallback data of FelixRicIvan's repositories
+        const FALLBACK_REPOS = [
+            {
+                name: "-",
+                description: "Personal configuration files, code snippets, and miscellaneous developer scratchpad.",
+                html_url: "https://github.com/FelixRicIvan/-",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-03-16T07:10:10Z"
+            },
+            {
+                name: "Agentic-Coding",
+                description: "Exploring agentic AI coding frameworks, LLM workflows, and automated software development tools.",
+                html_url: "https://github.com/FelixRicIvan/Agentic-Coding",
+                language: "JavaScript",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-04-23T21:07:25Z"
+            },
+            {
+                name: "AI",
+                description: "郭宏誠 - Artificial Intelligence algorithms, machine learning model experiments, and neural network pipelines.",
+                html_url: "https://github.com/FelixRicIvan/AI",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-01-08T15:55:29Z"
+            },
+            {
+                name: "cghsinchu_gform",
+                description: "Custom styling, user interface overlays, and automation scripts tailored for Hsinchu Google Forms customization.",
+                html_url: "https://github.com/FelixRicIvan/cghsinchu_gform",
+                language: "CSS",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-12-20T07:13:24Z"
+            },
+            {
+                name: "github-LLM",
+                description: "郭宏誠 - Large Language Model (LLM) integration scripts with the GitHub REST API, repository managers, and autonomous agents.",
+                html_url: "https://github.com/FelixRicIvan/github-LLM",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-04-15T08:45:33Z"
+            },
+            {
+                name: "kerjasama",
+                description: "demo git project bekerja sama - Git collaborative workflow playground showing branched integration, merging, and conflict resolution.",
+                html_url: "https://github.com/FelixRicIvan/kerjasama",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2017-07-12T06:29:38Z"
+            },
+            {
+                name: "les-rabu",
+                description: "Wednesday coding course materials, study guides, and assignment solutions for programming students.",
+                html_url: "https://github.com/FelixRicIvan/les-rabu",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2017-07-05T11:09:43Z"
+            },
+            {
+                name: "MachineLearning",
+                description: "Core machine learning frameworks: regression model tests, categorization algorithms, and data pre-processing utilities.",
+                html_url: "https://github.com/FelixRicIvan/MachineLearning",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-04-16T02:48:01Z"
+            },
+            {
+                name: "MachineLearning2",
+                description: "郭宏誠 - Advanced machine learning structures: deep learning model architectures, feature engineering pipelines, and complex dataset analyses.",
+                html_url: "https://github.com/FelixRicIvan/MachineLearning2",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-06-10T08:15:37Z"
+            },
+            {
+                name: "PHP",
+                description: "Full-stack PHP application templates, backend systems, database connectivity, and backend security paradigms.",
+                html_url: "https://github.com/FelixRicIvan/PHP",
+                language: "PHP",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-04-26T20:39:02Z"
+            }
+        ];
+
+        const FALLBACK_PROFILE = {
+            name: "FelixRicIvan",
+            login: "FelixRicIvan",
+            avatar_url: "https://avatars.githubusercontent.com/u/29918435?v=4",
+            bio: "郭宏誠 | Specialized in AI Engineering, Machine Learning Research, and Full-Stack Development.",
+            location: "Taiwan",
+            blog: "https://github.com/FelixRicIvan",
+            public_repos: 10,
+            followers: 0,
+            following: 0
+        };
+
+        // State variables
+        let repos = [];
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let currentSort = 'updated';
+
+        // DOM elements
+        const container = document.getElementById('repos-container');
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const chips = document.querySelectorAll('.chip');
+        const sourceBadge = document.getElementById('source-badge');
+        const sourceText = document.getElementById('source-text');
+
+        // Language colors map
+        const LANG_COLORS = {
+            'JavaScript': 'var(--lang-js)',
+            'Jupyter Notebook': 'var(--lang-jupyter)',
+            'CSS': 'var(--lang-css)',
+            'PHP': 'var(--lang-php)',
+            'HTML': 'var(--lang-html)',
+            'Git': 'var(--lang-git)'
+        };
+
+        // Initialize application
+        async function init() {
+            try {
+                // Try live fetch
+                const liveData = await fetchGitHubData();
+                repos = liveData.repos;
+                updateProfile(liveData.profile);
+                setSourceBadge(true);
+            } catch (err) {
+                console.warn("GitHub API rate limit or network issue. Loading premium static fallback data.", err);
+                repos = FALLBACK_REPOS;
+                updateProfile(FALLBACK_PROFILE);
+                setSourceBadge(false);
+            }
+
+            updateCounts();
+            renderRepos();
+            setupEventListeners();
+            
+            // Re-render Lucide icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // Fetch user and repositories from GitHub API
+        async function fetchGitHubData() {
+            const userRes = await fetch('https://api.github.com/users/FelixRicIvan');
+            if (!userRes.ok) throw new Error("Failed to fetch user profile");
+            const profile = await userRes.json();
+
+            const reposRes = await fetch('https://api.github.com/users/FelixRicIvan/repos?sort=updated&per_page=100');
+            if (!reposRes.ok) throw new Error("Failed to fetch repositories");
+            const rawRepos = await reposRes.json();
+
+            // Format repositories details
+            const formattedRepos = rawRepos.map(r => ({
+                name: r.name,
+                description: r.description || getPredefinedDescription(r.name),
+                html_url: r.html_url,
+                language: r.language,
+                stargazers_count: r.stargazers_count,
+                forks_count: r.forks_count,
+                updated_at: r.updated_at
+            }));
+
+            return { profile, repos: formattedRepos };
+        }
+
+        // Get rich description for repos that might not have one in GitHub settings
+        function getPredefinedDescription(name) {
+            const fallback = FALLBACK_REPOS.find(r => r.name.toLowerCase() === name.toLowerCase());
+            return fallback ? fallback.description : "Developer workspace and experiment environment details for the project.";
+        }
+
+        // Update profile section content
+        function updateProfile(profile) {
+            document.getElementById('user-avatar').src = profile.avatar_url;
+            document.getElementById('user-name').textContent = profile.name || profile.login;
+            document.getElementById('user-handle').innerHTML = `<i data-lucide="github" style="width: 16px; height: 16px;"></i> @${profile.login}`;
+            document.getElementById('user-bio').textContent = profile.bio || FALLBACK_PROFILE.bio;
+            document.getElementById('user-location').textContent = profile.location || 'Taiwan';
+            
+            const blog = profile.blog || `github.com/${profile.login}`;
+            const blogLink = document.getElementById('user-blog');
+            blogLink.textContent = blog.replace(/^https?:\/\//, '');
+            blogLink.href = blog.startsWith('http') ? blog : `https://${blog}`;
+
+            // Stats
+            document.getElementById('stat-repos').textContent = profile.public_repos || repos.length;
+            
+            // Calculate total stars & forks
+            const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+            const totalForks = repos.reduce((sum, r) => sum + r.forks_count, 0);
+            document.getElementById('stat-stars').textContent = totalStars;
+            document.getElementById('stat-forks').textContent = totalForks;
+
+            // Language count
+            const uniqueLangs = new Set(repos.map(r => r.language).filter(Boolean));
+            document.getElementById('stat-lang-count').textContent = uniqueLangs.size || 4;
+        }
+
+        // Update status badge (Live / Offline-Cache)
+        function setSourceBadge(isLive) {
+            if (isLive) {
+                sourceBadge.className = "source-status";
+                sourceBadge.innerHTML = `<i data-lucide="wifi"></i> Live API Mode`;
+            } else {
+                sourceBadge.className = "source-status fallback";
+                sourceBadge.innerHTML = `<i data-lucide="wifi-off"></i> Cached Data`;
+            }
+        }
+
+        // Update filter counters
+        function updateCounts() {
+            document.getElementById('count-all').textContent = repos.length;
+            
+            const countJupyter = repos.filter(r => r.language === 'Jupyter Notebook').length;
+            const countJs = repos.filter(r => r.language === 'JavaScript').length;
+            const countCss = repos.filter(r => r.language === 'CSS').length;
+            const countPhp = repos.filter(r => r.language === 'PHP').length;
+            
+            const standardLangs = ['Jupyter Notebook', 'JavaScript', 'CSS', 'PHP'];
+            const countOther = repos.filter(r => !r.language || !standardLangs.includes(r.language)).length;
+
+            document.getElementById('count-jupyter').textContent = countJupyter;
+            document.getElementById('count-js').textContent = countJs;
+            document.getElementById('count-css').textContent = countCss;
+            document.getElementById('count-php').textContent = countPhp;
+            document.getElementById('count-other').textContent = countOther;
+        }
+
+        // Filter and sort repositories, then render them
+        function renderRepos() {
+            container.innerHTML = '';
+
+            // Apply filter
+            let filtered = repos.filter(r => {
+                // Text search match
+                const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                     (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()));
+                
+                if (!matchesSearch) return false;
+
+                // Chip filter match
+                if (activeFilter === 'all') return true;
+                if (activeFilter === 'Other') {
+                    const standardLangs = ['Jupyter Notebook', 'JavaScript', 'CSS', 'PHP'];
+                    return !r.language || !standardLangs.includes(r.language);
+                }
+                return r.language === activeFilter;
+            });
+
+            // Apply sort
+            filtered.sort((a, b) => {
+                if (currentSort === 'updated') {
+                    return new Date(b.updated_at) - new Date(a.updated_at);
+                } else if (currentSort === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (currentSort === 'stars') {
+                    return b.stargazers_count - a.stargazers_count;
+                }
+                return 0;
+            });
+
+            // Empty state check
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="search-code"></i>
+                        <h3>沒有找到相符的儲存庫</h3>
+                        <p>請嘗試其他搜尋字詞或篩選條件。</p>
+                    </div>
+                `;
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+
+            // Render repo cards
+            filtered.forEach(repo => {
+                const langName = repo.language || 'Miscellaneous';
+                const langColor = LANG_COLORS[repo.language] || 'var(--lang-default)';
+                
+                // Format date to locale string
+                const updatedDate = new Date(repo.updated_at).toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                const card = document.createElement('div');
+                card.className = 'repo-card';
+                card.innerHTML = `
+                    <div class="repo-header">
+                        <div class="repo-title-wrapper">
+                            <a href="${repo.html_url}" target="_blank" class="repo-title">
+                                <i data-lucide="book-marked" style="width: 18px; height: 18px; color: var(--accent-cyan);"></i>
+                                ${repo.name}
+                            </a>
+                            <span class="repo-badge">public</span>
+                        </div>
+                        <p class="repo-desc">${repo.description || 'No description provided.'}</p>
+                    </div>
+                    <div class="repo-footer">
+                        <div class="repo-meta-left">
+                            <span class="repo-lang">
+                                <span class="lang-dot" style="background-color: ${langColor}"></span>
+                                ${langName}
+                            </span>
+                            ${repo.stargazers_count > 0 ? `
+                                <span class="repo-stat">
+                                    <i data-lucide="star" style="width: 14px; height: 14px;"></i>
+                                    ${repo.stargazers_count}
+                                </span>
+                            ` : ''}
+                            ${repo.forks_count > 0 ? `
+                                <span class="repo-stat">
+                                    <i data-lucide="git-fork" style="width: 14px; height: 14px;"></i>
+                                    ${repo.forks_count}
+                                </span>
+                            ` : ''}
+                        </div>
+                        <span class="repo-date">${updatedDate}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Re-render icons inside new cards
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // Setup event handlers
+        function setupEventListeners() {
+            // Search input filter
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderRepos();
+            });
+
+            // Sort selector
+            sortSelect.addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                renderRepos();
+            });
+
+            // Filter chips toggle
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeFilter = chip.getAttribute('data-filter');
+                    renderRepos();
+                });
+            });
+        }
+
+        // Start initialization
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
