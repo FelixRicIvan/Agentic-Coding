@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FelixRicIvan | Dynamic Portfolio</title>
+    <meta name="description" content="FelixRicIvan's professional dynamic portfolio powered by Supabase. Browse repositories with real-time data.">
+    <meta name="keywords" content="FelixRicIvan, Portfolio, GitHub, Supabase, Dynamic, Developer">
+
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-page: #f0f4f8;
+            --bg-card: #ffffff;
+            --bg-card-hover: #fafbff;
+            --bg-input: #f8fafc;
+            --bg-tag: #eef2ff;
+
+            --border-subtle: #e2e8f0;
+            --border-hover: #c7d2fe;
+            --border-active: #6366f1;
+
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --text-link: #4f46e5;
+
+            --accent-primary: #6366f1;
+            --accent-primary-soft: rgba(99, 102, 241, 0.08);
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.08);
+            --shadow-glow: 0 8px 32px rgba(99, 102, 241, 0.12);
+
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Ambient Background ─── */
+        .ambient-bg {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+
+        .ambient-orb {
+            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.12;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 500px; height: 500px; background: #818cf8; top: -100px; right: 5%; }
+        .orb-2 { width: 400px; height: 400px; background: #06b6d4; bottom: 5%; left: -5%; animation-delay: -8s; }
+        .orb-3 { width: 350px; height: 350px; background: #a78bfa; top: 50%; left: 40%; animation-delay: -15s; }
+
+        @keyframes float {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(40px, -30px) scale(1.1); }
+            100% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        /* ─── Layout ─── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }
+
+        /* ─── Navbar ─── */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 24px; margin-bottom: 36px;
+            background: rgba(255,255,255,0.85); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); backdrop-filter: blur(24px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-brand {
+            font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800;
+            letter-spacing: -0.5px; text-decoration: none;
+            background: linear-gradient(135deg, #0f172a 40%, var(--accent-primary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-badge {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.72rem; font-weight: 600; font-family: 'Fira Code', monospace;
+            padding: 5px 12px; border-radius: var(--radius-full);
+            transition: all 0.3s;
+        }
+        .nav-badge.loading {
+            background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); color: #d97706;
+        }
+        .nav-badge.live {
+            background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #059669;
+        }
+
+        /* ─── Hero Profile ─── */
+        .hero {
+            display: flex; align-items: center; gap: 32px;
+            padding: 36px; margin-bottom: 32px;
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .hero:hover { box-shadow: var(--shadow-glow); border-color: var(--border-hover); }
+
+        .avatar-ring {
+            width: 100px; height: 100px; border-radius: 50%;
+            padding: 3px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-primary));
+            box-shadow: 0 6px 20px rgba(99,102,241,0.15);
+        }
+        .avatar-ring img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 3px solid #fff; background: #f1f5f9;
+        }
+
+        .hero-info h1 {
+            font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
+            letter-spacing: -0.5px; color: var(--text-heading); margin-bottom: 4px;
+        }
+        .hero-info .tagline {
+            font-size: 0.95rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;
+        }
+        .hero-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: 'Fira Code', monospace; font-size: 0.82rem; font-weight: 500;
+            color: var(--accent-primary); text-decoration: none;
+            padding: 5px 14px; border-radius: var(--radius-full);
+            background: var(--accent-primary-soft); border: 1px solid rgba(99,102,241,0.15);
+            transition: all 0.2s;
+        }
+        .hero-link:hover { background: rgba(99,102,241,0.14); box-shadow: 0 0 12px rgba(99,102,241,0.12); }
+
+        /* ─── Stats Row ─── */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); padding: 20px; text-align: center;
+            box-shadow: var(--shadow-sm); transition: all 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-hover); }
+        .stat-card .stat-icon { margin-bottom: 8px; color: var(--accent-primary); }
+        .stat-card .stat-num {
+            font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-heading);
+        }
+        .stat-card .stat-label {
+            font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 0.8px; margin-top: 2px;
+        }
+
+        /* ─── Toolbar ─── */
+        .toolbar {
+            display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+        }
+        .search-box {
+            position: relative; flex-grow: 1; min-width: 220px;
+        }
+        .search-box i {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); pointer-events: none;
+        }
+        .search-input {
+            width: 100%; padding: 11px 14px 11px 40px; font-family: inherit; font-size: 0.88rem;
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm); color: var(--text-heading); outline: none;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--accent-primary); background: #fff;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+        .sort-select {
+            padding: 11px 40px 11px 14px; font-family: inherit; font-size: 0.88rem;
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm); color: var(--text-body); outline: none; cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+        }
+
+        /* ─── Language Filter Chips ─── */
+        .chip-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .chip {
+            padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 500;
+            cursor: pointer; border: 1px solid var(--border-subtle); background: var(--bg-card);
+            color: var(--text-muted); transition: all 0.25s; display: flex; align-items: center; gap: 5px;
+        }
+        .chip:hover { background: #f1f5f9; color: var(--text-heading); }
+        .chip.active {
+            background: var(--accent-primary-soft); border-color: var(--accent-primary);
+            color: var(--accent-primary); box-shadow: 0 0 10px rgba(99,102,241,0.1);
+        }
+        .chip .chip-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+
+        /* ─── Repository Grid ─── */
+        .repo-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .repo-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); padding: 24px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: var(--shadow-sm); transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+            position: relative; overflow: hidden;
+            animation: fadeInUp 0.5s ease both;
+        }
+        .repo-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: var(--accent-primary); box-shadow: var(--shadow-glow);
+        }
+        .repo-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .repo-card:hover::before { opacity: 1; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .card-title {
+            font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem;
+            color: var(--text-heading); text-decoration: none;
+            display: flex; align-items: center; gap: 7px; word-break: break-all;
+            transition: color 0.2s;
+        }
+        .card-title:hover { color: var(--accent-primary); }
+
+        .card-visibility {
+            font-size: 0.68rem; font-weight: 500; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 8px;
+            background: #f1f5f9; border: 1px solid #e2e8f0; color: var(--text-muted);
+        }
+
+        .card-desc {
+            font-size: 0.85rem; color: var(--text-body); line-height: 1.55; margin-bottom: 16px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            min-height: 3.9em;
+        }
+
+        .card-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .topic-tag {
+            font-size: 0.7rem; padding: 3px 8px; border-radius: var(--radius-full);
+            background: var(--bg-tag); color: var(--accent-primary);
+            font-weight: 500; border: 1px solid rgba(99,102,241,0.1);
+        }
+
+        .card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid #f1f5f9; padding-top: 14px; font-size: 0.78rem; color: var(--text-muted);
+        }
+        .card-lang { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .lang-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .card-stats { display: flex; gap: 12px; }
+        .card-stat { display: flex; align-items: center; gap: 4px; }
+
+        /* ─── Empty State ─── */
+        .empty-state {
+            text-align: center; padding: 60px 20px; color: var(--text-muted);
+        }
+        .empty-state i { margin-bottom: 12px; color: #cbd5e1; }
+        .empty-state h3 { font-family: 'Outfit', sans-serif; color: var(--text-heading); margin-bottom: 6px; }
+
+        /* ─── Loading Skeleton ─── */
+        .skeleton-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);
+        }
+        .skeleton-line {
+            height: 14px; border-radius: 6px; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line.w-60 { width: 60%; }
+        .skeleton-line.w-80 { width: 80%; }
+        .skeleton-line.w-40 { width: 40%; height: 10px; }
+        .skeleton-line + .skeleton-line { margin-top: 12px; }
+
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ─── Footer ─── */
+        .site-footer {
+            text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.82rem;
+        }
+        .site-footer a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .hero { flex-direction: column; text-align: center; gap: 20px; padding: 28px; }
+            .hero-info h1 { font-size: 1.6rem; }
+            .repo-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="#" class="nav-brand">
+                <i data-lucide="database" style="width:20px;height:20px;"></i>
+                FelixRicIvan.dev
+            </a>
+            <div class="nav-badge loading" id="statusBadge">
+                <i data-lucide="loader" style="width:12px;height:12px;" class="spin-icon"></i>
+                <span id="statusText">CONNECTING</span>
+            </div>
+        </nav>
+
+        <!-- Hero Profile -->
+        <div class="hero">
+            <div class="avatar-ring">
+                <img src="https://avatars.githubusercontent.com/u/29918435?v=4" alt="FelixRicIvan Avatar" id="avatarImg">
+            </div>
+            <div class="hero-info">
+                <h1>FelixRicIvan</h1>
+                <p class="tagline">Full-stack Developer · AI/ML Enthusiast · Open Source Contributor</p>
+                <a href="https://github.com/FelixRicIvan" target="_blank" class="hero-link">
+                    <i data-lucide="github" style="width:14px;height:14px;"></i>
+                    @FelixRicIvan
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="folder-git-2" style="width:22px;height:22px;"></i></div>
+                <div class="stat-num" id="statRepos">--</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="star" style="width:22px;height:22px;"></i></div>
+                <div class="stat-num" id="statStars">--</div>
+                <div class="stat-label">Total Stars</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="git-fork" style="width:22px;height:22px;"></i></div>
+                <div class="stat-num" id="statForks">--</div>
+                <div class="stat-label">Total Forks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i data-lucide="code-2" style="width:22px;height:22px;"></i></div>
+                <div class="stat-num" id="statLangs">--</div>
+                <div class="stat-label">Languages</div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-box">
+                <i data-lucide="search" style="width:16px;height:16px;"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search repositories...">
+            </div>
+            <select class="sort-select" id="sortSelect">
+                <option value="stars">⭐ Most Stars</option>
+                <option value="updated">🕐 Recently Updated</option>
+                <option value="name">🔤 Name (A-Z)</option>
+                <option value="forks">🍴 Most Forks</option>
+            </select>
+        </div>
+
+        <!-- Language Chips -->
+        <div class="chip-bar" id="chipBar"></div>
+
+        <!-- Repository Grid -->
+        <div class="repo-grid" id="repoGrid">
+            <!-- Skeleton loading cards -->
+            <div class="skeleton-card"><div class="skeleton-line w-60"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-40"></div></div>
+            <div class="skeleton-card"><div class="skeleton-line w-60"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-40"></div></div>
+            <div class="skeleton-card"><div class="skeleton-line w-60"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-80"></div><div class="skeleton-line w-40"></div></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            Powered by <a href="https://supabase.com" target="_blank">Supabase</a> ·
+            Data synced from <a href="https://github.com/FelixRicIvan" target="_blank">GitHub</a> ·
+            Built with ❤️
+        </footer>
+    </div>
+
+    <style>
+        .spin-icon { animation: spin 1.2s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <script>
+        // ─── Supabase Configuration ───
+        // Anon key is safe for frontend: RLS restricts to SELECT only
+        const SUPABASE_URL = 'https://kcjjnnedqqdvdxdmzgez.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjampubmVkcXFkdmR4ZG16Z2V6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MzE3NzgsImV4cCI6MjA5NTAwNzc3OH0.DKX7umA1eb9H4pW3ZTGTEKxZGZ_jacrCsTQofPlcaXs';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ─── Language Color Map ───
+        const LANG_COLORS = {
+            'JavaScript':      '#f1e05a',
+            'Python':          '#3572A5',
+            'Jupyter Notebook':'#DA5B0B',
+            'CSS':             '#563d7c',
+            'PHP':             '#4F5D95',
+            'HTML':            '#e34c26',
+            'TypeScript':      '#3178c6',
+            'Java':            '#b07219',
+            'C++':             '#f34b7d',
+            'C#':              '#178600',
+            'Ruby':            '#701516',
+            'Go':              '#00ADD8',
+            'Rust':            '#dea584',
+            'Shell':           '#89e051',
+            '':                '#94a3b8',
+        };
+
+        function getLangColor(lang) {
+            return LANG_COLORS[lang] || LANG_COLORS[''];
+        }
+
+        // ─── State ───
+        let allRepos = [];
+        let activeFilter = 'all';
+
+        // ─── Fetch Data from Supabase ───
+        async function fetchRepos() {
+            const { data, error } = await supabaseClient
+                .from('repositories')
+                .select('*')
+                .order('stargazers_count', { ascending: false });
+
+            if (error) {
+                console.error('Supabase Error:', error);
+                showError();
+                return;
+            }
+
+            allRepos = data;
+            updateStatus('live');
+            updateStats();
+            buildChips();
+            renderRepos(allRepos);
+        }
+
+        // ─── Update Connection Status ───
+        function updateStatus(status) {
+            const badge = document.getElementById('statusBadge');
+            const text = document.getElementById('statusText');
+            if (status === 'live') {
+                badge.className = 'nav-badge live';
+                badge.innerHTML = '<i data-lucide="zap" style="width:12px;height:12px;"></i><span>LIVE · SUPABASE</span>';
+                lucide.createIcons();
+            }
+        }
+
+        // ─── Update Stats ───
+        function updateStats() {
+            const totalStars = allRepos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+            const totalForks = allRepos.reduce((s, r) => s + (r.forks_count || 0), 0);
+            const langs = new Set(allRepos.map(r => r.language).filter(Boolean));
+
+            animateCounter('statRepos', allRepos.length);
+            animateCounter('statStars', totalStars);
+            animateCounter('statForks', totalForks);
+            animateCounter('statLangs', langs.size);
+        }
+
+        function animateCounter(id, target) {
+            const el = document.getElementById(id);
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(interval); }
+                el.textContent = current;
+            }, 30);
+        }
+
+        // ─── Build Language Chips ───
+        function buildChips() {
+            const bar = document.getElementById('chipBar');
+            const langs = {};
+            allRepos.forEach(r => {
+                const l = r.language || 'Unknown';
+                langs[l] = (langs[l] || 0) + 1;
+            });
+
+            let html = `<div class="chip active" data-lang="all" onclick="filterByLang('all')">
+                <i data-lucide="layers" style="width:12px;height:12px;"></i> All (${allRepos.length})
+            </div>`;
+
+            Object.entries(langs)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([lang, count]) => {
+                    const color = getLangColor(lang);
+                    html += `<div class="chip" data-lang="${lang}" onclick="filterByLang('${lang}')">
+                        <span class="chip-dot" style="background:${color}"></span> ${lang} (${count})
+                    </div>`;
+                });
+
+            bar.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // ─── Filter by Language ───
+        function filterByLang(lang) {
+            activeFilter = lang;
+            document.querySelectorAll('.chip').forEach(c => {
+                c.classList.toggle('active', c.dataset.lang === lang);
+            });
+            applyFilters();
+        }
+
+        // ─── Apply All Filters & Sorting ───
+        function applyFilters() {
+            let filtered = [...allRepos];
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const sort = document.getElementById('sortSelect').value;
+
+            // Language filter
+            if (activeFilter !== 'all') {
+                filtered = filtered.filter(r => (r.language || 'Unknown') === activeFilter);
+            }
+
+            // Search filter
+            if (query) {
+                filtered = filtered.filter(r =>
+                    (r.name || '').toLowerCase().includes(query) ||
+                    (r.description || '').toLowerCase().includes(query) ||
+                    (r.language || '').toLowerCase().includes(query)
+                );
+            }
+
+            // Sort
+            switch (sort) {
+                case 'stars':   filtered.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0)); break;
+                case 'forks':   filtered.sort((a, b) => (b.forks_count || 0) - (a.forks_count || 0)); break;
+                case 'updated': filtered.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)); break;
+                case 'name':    filtered.sort((a, b) => (a.name || '').localeCompare(b.name || '')); break;
+            }
+
+            renderRepos(filtered);
+        }
+
+        // ─── Render Repo Cards ───
+        function renderRepos(repos) {
+            const grid = document.getElementById('repoGrid');
+
+            if (repos.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i data-lucide="search-x" style="width:48px;height:48px;"></i>
+                        <h3>No repositories found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = repos.map((repo, i) => {
+                const lang = repo.language || '';
+                const langColor = getLangColor(lang);
+                const desc = repo.description || 'No description provided.';
+                const updated = repo.updated_at ? timeAgo(new Date(repo.updated_at)) : '';
+                const topicsArr = repo.topics || [];
+
+                return `
+                <div class="repo-card" style="animation-delay: ${i * 0.06}s">
+                    <div>
+                        <div class="card-header">
+                            <a href="${repo.html_url}" target="_blank" class="card-title">
+                                <i data-lucide="book-marked" style="width:16px;height:16px;color:var(--accent-primary);flex-shrink:0;"></i>
+                                ${repo.name}
+                            </a>
+                            <span class="card-visibility">${repo.visibility || 'public'}</span>
+                        </div>
+                        <p class="card-desc">${desc}</p>
+                        ${topicsArr.length > 0 ? `
+                            <div class="card-topics">
+                                ${topicsArr.slice(0, 5).map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                            </div>` : ''}
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-lang">
+                            ${lang ? `<span class="lang-dot" style="background:${langColor}"></span> ${lang}` : '<span style="color:#94a3b8">—</span>'}
+                        </div>
+                        <div class="card-stats">
+                            <span class="card-stat"><i data-lucide="star" style="width:13px;height:13px;"></i> ${repo.stargazers_count || 0}</span>
+                            <span class="card-stat"><i data-lucide="git-fork" style="width:13px;height:13px;"></i> ${repo.forks_count || 0}</span>
+                            <span class="card-stat" title="${repo.updated_at}"><i data-lucide="clock" style="width:13px;height:13px;"></i> ${updated}</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // ─── Time Ago Helper ───
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            const intervals = [
+                { label: 'y', seconds: 31536000 },
+                { label: 'mo', seconds: 2592000 },
+                { label: 'd', seconds: 86400 },
+                { label: 'h', seconds: 3600 },
+                { label: 'm', seconds: 60 },
+            ];
+            for (const i of intervals) {
+                const count = Math.floor(seconds / i.seconds);
+                if (count >= 1) return `${count}${i.label} ago`;
+            }
+            return 'just now';
+        }
+
+        // ─── Error State ───
+        function showError() {
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'nav-badge loading';
+            badge.innerHTML = '<i data-lucide="alert-triangle" style="width:12px;height:12px;"></i><span>CONNECTION ERROR</span>';
+            const grid = document.getElementById('repoGrid');
+            grid.innerHTML = `
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <i data-lucide="wifi-off" style="width:48px;height:48px;"></i>
+                    <h3>Failed to connect to Supabase</h3>
+                    <p>Please check your network connection and try again.</p>
+                </div>`;
+            lucide.createIcons();
+        }
+
+        // ─── Event Listeners ───
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+        // ─── Initialize ───
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            fetchRepos();
+        });
+    </script>
+</body>
+</html>
