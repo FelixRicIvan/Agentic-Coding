@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FelixRicIvan | Cinema Bento Portfolio</title>
+    <!-- SEO Optimization -->
+    <meta name="description" content="FelixRicIvan's Cinema Bento Grid developer portfolio. Featuring interactive repos, tech stacks, live activity maps, and an interactive AI terminal command line.">
+    <meta name="keywords" content="FelixRicIvan, Bento Grid, Portfolio, UI/UX, GitHub, Developer, AI, Machine Learning">
+    
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            /* Palette: Modern Dark (Cinema Mobile) + Electric Blue */
+            --bg-void: #030304;
+            --bg-base: #07070a;
+            --bg-elevated: rgba(13, 13, 18, 0.65);
+            --border-glow: rgba(94, 106, 210, 0.15);
+            --border-hover: rgba(94, 106, 210, 0.45);
+            
+            --text-title: #ffffff;
+            --text-body: #d1d5db;
+            --text-dim: #9ca3af;
+            
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #5e6ad2;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            
+            /* Language Colors */
+            --color-js: #f1e05a;
+            --color-ipynb: #da5b0b;
+            --color-css: #563d7c;
+            --color-php: #4f5d95;
+            --color-other: #5e6ad2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-void);
+            color: var(--text-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        /* Ambient Glowing Backgrounds (Aurora Mesh Effect) */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.25;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-indigo) 0%, transparent 80%);
+            top: -10%;
+            right: 10%;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 80%);
+            bottom: 10%;
+            left: -5%;
+            animation-delay: -7s;
+        }
+
+        .blob-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, var(--accent-purple) 0%, transparent 80%);
+            top: 40%;
+            left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -50px) scale(1.15); }
+            100% { transform: translate(-40px, 40px) scale(0.9); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Top Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 16px 24px;
+            background: rgba(10, 10, 15, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, var(--accent-indigo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-status {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .nav-status.cached {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* Bento Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Bento Tile / Card Base */
+        .bento-tile {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(24px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .bento-tile:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: var(--border-hover);
+            box-shadow: 0 16px 40px rgba(94, 106, 210, 0.15);
+        }
+
+        .tile-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--text-title);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .tile-header i {
+            color: var(--accent-indigo);
+        }
+
+        /* Tile Spanning Classes */
+        .span-2-cols { grid-column: span 2; }
+        .span-3-cols { grid-column: span 3; }
+        .span-2-rows { grid-row: span 2; }
+
+        /* Card 1: Profile (Asymmetric layout) */
+        .profile-tile {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .avatar-frame {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+            box-shadow: 0 8px 24px rgba(94, 106, 210, 0.25);
+            flex-shrink: 0;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #07070a;
+            background: #111;
+        }
+
+        .profile-details h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 40%, #b8c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .profile-username {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            background: rgba(6, 182, 212, 0.08);
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .profile-username:hover {
+            background: rgba(6, 182, 212, 0.15);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .profile-bio {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        /* Card 2: Interactive Statistics Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            height: 100%;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Card 3: Language breakdown chart */
+        .lang-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .lang-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .lang-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .lang-name {
+            font-weight: 600;
+            color: var(--text-body);
+        }
+
+        .lang-pct {
+            font-family: 'Fira Code', monospace;
+            color: var(--text-dim);
+        }
+
+        .lang-track {
+            height: 6px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .lang-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+        }
+
+        /* Card 4: GitHub Contribution Heatmap */
+        .heatmap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(28, 1fr);
+            gap: 4px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.2s;
+        }
+
+        .heatmap-cell.level-1 { background-color: rgba(94, 106, 210, 0.25); }
+        .heatmap-cell.level-2 { background-color: rgba(94, 106, 210, 0.45); }
+        .heatmap-cell.level-3 { background-color: rgba(94, 106, 210, 0.65); }
+        .heatmap-cell.level-4 { background-color: rgba(94, 106, 210, 0.95); }
+
+        .heatmap-cell:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 6px var(--accent-indigo);
+            z-index: 2;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        .legend-scales {
+            display: flex;
+            gap: 3px;
+        }
+
+        /* Card 5: Interactive Terminal Console */
+        .terminal-shell {
+            background: rgba(5, 5, 8, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 180px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .terminal-output {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .terminal-output::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .terminal-row {
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .terminal-row.cmd { color: var(--accent-cyan); }
+        .terminal-row.system { color: var(--accent-indigo); }
+        .terminal-row.err { color: #f87171; }
+        .terminal-row.success { color: var(--accent-green); }
+
+        .terminal-input-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-cyan);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 8px;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: inherit;
+            flex-grow: 1;
+        }
+
+        /* Card 6: Repositories list Browser (Bento Main Window) */
+        .repos-tile {
+            min-height: 480px;
+        }
+
+        .browser-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .browser-search {
+            position: relative;
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        .browser-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .search-field {
+            width: 100%;
+            background: rgba(5, 5, 8, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px 10px 38px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-field:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.2);
+        }
+
+        .browser-sort select {
+            background: rgba(5, 5, 8, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 36px 10px 14px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 14px;
+        }
+
+        /* Chips */
+        .chip-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-chip {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .filter-chip.active {
+            background: rgba(94, 106, 210, 0.15);
+            border-color: var(--accent-indigo);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(94, 106, 210, 0.2);
+        }
+
+        /* Repo List Items */
+        .list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            overflow-y: auto;
+            max-height: 480px;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .list-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .list-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        /* Sub-Card */
+        .repo-tile-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .repo-tile-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(94, 106, 210, 0.25);
+            transform: scale(1.02);
+        }
+
+        .item-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            word-break: break-all;
+        }
+
+        .item-title:hover {
+            color: var(--accent-cyan);
+        }
+
+        .item-badge {
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 2px 6px;
+            border-radius: 8px;
+            color: var(--text-dim);
+            text-transform: capitalize;
+        }
+
+        .item-desc {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 2.8em;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 12px;
+        }
+
+        .item-lang {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .item-lang-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .item-stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .item-stat {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Bento Grid Responsive */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .span-2-cols { grid-column: span 2; }
+            .span-3-cols { grid-column: span 2; }
+        }
+
+        @media (max-width: 600px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .span-2-cols { grid-column: span 1; }
+            .span-3-cols { grid-column: span 1; }
+            .profile-tile {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-details h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-dim);
+            font-size: 0.82rem;
+        }
+
+        footer a {
+            color: var(--accent-indigo);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Aurora Lighting -->
+    <div class="aurora-container">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Navbar -->
+        <nav>
+            <a href="#" class="nav-logo">
+                <i data-lucide="layers" style="width: 20px; height: 20px;"></i>
+                FelixRicIvan.dev
+            </a>
+            <div class="nav-status" id="status-badge">
+                <i data-lucide="zap" style="width: 12px; height: 12px; fill: currentColor;"></i>
+                <span>INITIALIZING</span>
+            </div>
+        </nav>
+
+        <!-- Bento Grid Structure -->
+        <div class="bento-grid">
+            
+            <!-- Tile 1: Profile (Large, span 2 columns) -->
+            <div class="bento-tile span-2-cols profile-tile">
+                <div class="avatar-frame">
+                    <img id="avatar-img" src="https://avatars.githubusercontent.com/u/29918435?v=4" alt="Avatar" class="avatar-img">
+                </div>
+                <div class="profile-details">
+                    <h1 id="user-name">FelixRicIvan</h1>
+                    <a href="https://github.com/FelixRicIvan" target="_blank" class="profile-username">
+                        <i data-lucide="github" style="width: 14px; height: 14px;"></i> @FelixRicIvan
+                    </a>
+                    <p class="profile-bio" id="user-bio">Loading developer background details...</p>
+                </div>
+            </div>
+
+            <!-- Tile 2: Social Stats (Medium) -->
+            <div class="bento-tile">
+                <div class="tile-header">
+                    <i data-lucide="activity"></i> Metrics & Analytics
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-lbl">Repos</span>
+                        <span class="stat-val" id="stat-repos">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-lbl">Stars</span>
+                        <span class="stat-val" id="stat-stars">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-lbl">Forks</span>
+                        <span class="stat-val" id="stat-forks">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-lbl">Stack</span>
+                        <span class="stat-val" id="stat-langs">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 3: Tech Languages (Medium, span 2 rows) -->
+            <div class="bento-tile span-2-rows">
+                <div class="tile-header">
+                    <i data-lucide="code-2"></i> Design & Technology Stack
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">
+                    Language metrics extracted from live public source trees.
+                </p>
+                <div class="lang-list" id="lang-list">
+                    <!-- Dynamic Lang Rows -->
+                    <div class="lang-item">
+                        <div class="lang-label-row">
+                            <span class="lang-name">Jupyter Notebook</span>
+                            <span class="lang-pct">0%</span>
+                        </div>
+                        <div class="lang-track"><div class="lang-bar" style="width: 0%; background: var(--color-ipynb);"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 4: Activity Heatmap (Medium) -->
+            <div class="bento-tile">
+                <div class="tile-header">
+                    <i data-lucide="calendar"></i> Git Contribution Map
+                </div>
+                <div class="heatmap-container">
+                    <div class="heatmap-grid" id="heatmap-grid">
+                        <!-- 28 columns x 4 rows = 112 cells representing mock grid commits -->
+                    </div>
+                    <div class="heatmap-legend">
+                        <span>Less</span>
+                        <div class="legend-scales">
+                            <div class="heatmap-cell" style="width: 10px; height: 10px; background: rgba(255, 255, 255, 0.03);"></div>
+                            <div class="heatmap-cell level-1" style="width: 10px; height: 10px;"></div>
+                            <div class="heatmap-cell level-2" style="width: 10px; height: 10px;"></div>
+                            <div class="heatmap-cell level-3" style="width: 10px; height: 10px;"></div>
+                            <div class="heatmap-cell level-4" style="width: 10px; height: 10px;"></div>
+                        </div>
+                        <span>More</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 5: Interactive Terminal Command Line (Medium) -->
+            <div class="bento-tile">
+                <div class="tile-header">
+                    <i data-lucide="terminal"></i> AI Assistant Console
+                </div>
+                <div class="terminal-shell">
+                    <div class="terminal-output" id="terminal-output">
+                        <div class="terminal-row system">Welcome FelixRicIvan's AI Terminal.</div>
+                        <div class="terminal-row text">Type 'help' to see list of valid commands.</div>
+                    </div>
+                    <div class="terminal-input-row">
+                        <span>$</span>
+                        <input type="text" id="terminal-input" class="terminal-input" placeholder="Type command here..." autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 6: Repos Browser (Large, span 3 columns) -->
+            <div class="bento-tile span-3-cols repos-tile">
+                <div class="tile-header">
+                    <i data-lucide="folder-git"></i> Repository Explorer
+                </div>
+                <div class="browser-bar">
+                    <div class="browser-search">
+                        <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                        <input type="text" id="search-field" class="search-field" placeholder="Filter projects by title or tech...">
+                    </div>
+                    <div class="browser-sort">
+                        <select id="sort-select">
+                            <option value="updated">Recent Activity</option>
+                            <option value="name">Repository Name</option>
+                            <option value="stars">Star Rating</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="chip-container" id="chip-container">
+                    <button class="filter-chip active" data-filter="all">All Projects</button>
+                    <!-- Other filters will be inserted here dynamically -->
+                </div>
+
+                <div class="list-container" id="list-container">
+                    <!-- Repo sub-cards rendering -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 FelixRicIvan. Built with UI/UX Pro Max system design guidelines.</p>
+            <p style="margin-top: 6px; font-size: 0.75rem; color: var(--text-dim);">
+                Version 2.5.0-Cinema | Hosted on <a href="https://github.com/FelixRicIvan/AgentCoding" target="_blank">AgentCoding</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // High quality static fallback data of FelixRicIvan's repositories
+        const STATIC_REPOS = [
+            {
+                name: "-",
+                description: "Personal configuration files, scratchpad workspace, and miscellaneous developer config settings.",
+                html_url: "https://github.com/FelixRicIvan/-",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-03-16T07:10:10Z"
+            },
+            {
+                name: "Agentic-Coding",
+                description: "Exploring agentic AI coding frameworks, autonomous software agents, and LLM automation tools.",
+                html_url: "https://github.com/FelixRicIvan/Agentic-Coding",
+                language: "JavaScript",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-04-23T21:07:25Z"
+            },
+            {
+                name: "AI",
+                description: "郭宏誠 - Artificial Intelligence algorithms, core neural network pipelines, and machine learning models.",
+                html_url: "https://github.com/FelixRicIvan/AI",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-01-08T15:55:29Z"
+            },
+            {
+                name: "cghsinchu_gform",
+                description: "Custom UI forms, stylesheet styles, and automation overlays for Google Form customizations in Hsinchu.",
+                html_url: "https://github.com/FelixRicIvan/cghsinchu_gform",
+                language: "CSS",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-12-20T07:13:24Z"
+            },
+            {
+                name: "github-LLM",
+                description: "郭宏誠 - Integrating Large Language Models (LLMs) with Github REST APIs for repository management and automated agents.",
+                html_url: "https://github.com/FelixRicIvan/github-LLM",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-04-15T08:45:33Z"
+            },
+            {
+                name: "kerjasama",
+                description: "demo git project bekerja sama - Collaborative Git workflow branch testing and integration playground.",
+                html_url: "https://github.com/FelixRicIvan/kerjasama",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2017-07-12T06:29:38Z"
+            },
+            {
+                name: "les-rabu",
+                description: "Wednesday classroom materials, training tutorials, and hands-on coding assignments for programming pupils.",
+                html_url: "https://github.com/FelixRicIvan/les-rabu",
+                language: null,
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2017-07-05T11:09:43Z"
+            },
+            {
+                name: "MachineLearning",
+                description: "Basic machine learning pipelines, classifier tests, dataset processors, and statistical analysis utilities.",
+                html_url: "https://github.com/FelixRicIvan/MachineLearning",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-04-16T02:48:01Z"
+            },
+            {
+                name: "MachineLearning2",
+                description: "郭宏誠 - Advanced machine learning algorithms: deep neural networks, complex data science experiments, and prediction models.",
+                html_url: "https://github.com/FelixRicIvan/MachineLearning2",
+                language: "Jupyter Notebook",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2025-06-10T08:15:37Z"
+            },
+            {
+                name: "PHP",
+                description: "Full-stack PHP application templates, backend admin dashboards, server-side APIs, and security configurations.",
+                html_url: "https://github.com/FelixRicIvan/PHP",
+                language: "PHP",
+                stargazers_count: 0,
+                forks_count: 0,
+                updated_at: "2026-04-26T20:39:02Z"
+            }
+        ];
+
+        const STATIC_PROFILE = {
+            name: "FelixRicIvan",
+            login: "FelixRicIvan",
+            avatar_url: "https://avatars.githubusercontent.com/u/29918435?v=4",
+            bio: "郭宏誠 | Creative AI Developer. Focused on Machine Learning, Intelligent Coding Agents, and modern Web engineering."
+        };
+
+        // State
+        let repos = [];
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let currentSort = 'updated';
+
+        // DOM elements
+        const statusBadge = document.getElementById('status-badge');
+        const listContainer = document.getElementById('list-container');
+        const searchField = document.getElementById('search-field');
+        const sortSelect = document.getElementById('sort-select');
+        const chipContainer = document.getElementById('chip-container');
+        const termInput = document.getElementById('terminal-input');
+        const termOutput = document.getElementById('terminal-output');
+
+        const LANG_COLORS = {
+            'JavaScript': 'var(--color-js)',
+            'Jupyter Notebook': 'var(--color-ipynb)',
+            'CSS': 'var(--color-css)',
+            'PHP': 'var(--color-php)'
+        };
+
+        // Init function
+        async function init() {
+            // Draw Heatmap grid (112 cells)
+            drawHeatmap();
+
+            try {
+                // Fetch dynamic data
+                const response = await fetchGitHubData();
+                repos = response.repos;
+                renderProfile(response.profile);
+                statusBadge.className = "nav-status";
+                statusBadge.innerHTML = `<i data-lucide="wifi" style="width: 12px; height: 12px;"></i> LIVE MODE`;
+            } catch (e) {
+                console.warn("Using offline cached data.", e);
+                repos = STATIC_REPOS;
+                renderProfile(STATIC_PROFILE);
+                statusBadge.className = "nav-status cached";
+                statusBadge.innerHTML = `<i data-lucide="wifi-off" style="width: 12px; height: 12px;"></i> CACHED DATA`;
+            }
+
+            renderStats();
+            renderLanguageBar();
+            renderChips();
+            renderRepos();
+            setupEventListeners();
+            setupTerminal();
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Draw contribution heat map grid
+        function drawHeatmap() {
+            const grid = document.getElementById('heatmap-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 112; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                
+                // Add random levels for visualization
+                const rand = Math.random();
+                if (rand > 0.85) cell.classList.add('level-4');
+                else if (rand > 0.7) cell.classList.add('level-3');
+                else if (rand > 0.5) cell.classList.add('level-2');
+                else if (rand > 0.3) cell.classList.add('level-1');
+                
+                grid.appendChild(cell);
+            }
+        }
+
+        // Fetch from API
+        async function fetchGitHubData() {
+            const uRes = await fetch('https://api.github.com/users/FelixRicIvan');
+            if (!uRes.ok) throw new Error("Profile API error");
+            const profile = await uRes.json();
+
+            const rRes = await fetch('https://api.github.com/users/FelixRicIvan/repos?sort=updated&per_page=100');
+            if (!rRes.ok) throw new Error("Repos API error");
+            const rawRepos = await rRes.json();
+
+            const formatted = rawRepos.map(r => ({
+                name: r.name,
+                description: r.description || getFallbackDesc(r.name),
+                html_url: r.html_url,
+                language: r.language,
+                stargazers_count: r.stargazers_count,
+                forks_count: r.forks_count,
+                updated_at: r.updated_at
+            }));
+
+            return { profile, repos: formatted };
+        }
+
+        function getFallbackDesc(name) {
+            const match = STATIC_REPOS.find(r => r.name.toLowerCase() === name.toLowerCase());
+            return match ? match.description : "Developer workspace and experiment environment details for the project.";
+        }
+
+        // Render profile card elements
+        function renderProfile(p) {
+            document.getElementById('avatar-img').src = p.avatar_url;
+            document.getElementById('user-name').textContent = p.name || p.login;
+            document.getElementById('user-bio').textContent = p.bio || STATIC_PROFILE.bio;
+        }
+
+        // Render stats card
+        function renderStats() {
+            document.getElementById('stat-repos').textContent = repos.length;
+
+            const stars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+            const forks = repos.reduce((sum, r) => sum + r.forks_count, 0);
+            document.getElementById('stat-stars').textContent = stars;
+            document.getElementById('stat-forks').textContent = forks;
+
+            const langs = new Set(repos.map(r => r.language).filter(Boolean));
+            document.getElementById('stat-langs').textContent = langs.size;
+        }
+
+        // Render language distribution bars
+        function renderLanguageBar() {
+            const langCounts = {};
+            let total = 0;
+
+            repos.forEach(r => {
+                if (r.language) {
+                    langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+                    total++;
+                }
+            });
+
+            const sortedLangs = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
+            const list = document.getElementById('lang-list');
+            list.innerHTML = '';
+
+            if (sortedLangs.length === 0) {
+                list.innerHTML = `<div style="font-size:0.8rem; color:var(--text-dim);">No language metrics found.</div>`;
+                return;
+            }
+
+            sortedLangs.forEach(([lang, count]) => {
+                const pct = Math.round((count / total) * 100);
+                const color = LANG_COLORS[lang] || 'var(--color-other)';
+                const row = document.createElement('div');
+                row.className = 'lang-item';
+                row.innerHTML = `
+                    <div class="lang-label-row">
+                        <span class="lang-name">${lang}</span>
+                        <span class="lang-pct">${pct}%</span>
+                    </div>
+                    <div class="lang-track">
+                        <div class="lang-bar" style="width: ${pct}%; background: ${color}"></div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // Render filter chip buttons
+        function renderChips() {
+            const langCounts = {};
+            repos.forEach(r => {
+                const key = r.language || 'Other';
+                langCounts[key] = (langCounts[key] || 0) + 1;
+            });
+
+            // Re-render
+            chipContainer.innerHTML = `<button class="filter-chip ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">All Projects <span style="font-size:0.7rem; opacity:0.6; margin-left:3px;">(${repos.length})</span></button>`;
+            
+            Object.entries(langCounts).sort((a, b) => b[1] - a[1]).forEach(([lang, count]) => {
+                const isSelected = activeFilter === lang;
+                const chip = document.createElement('button');
+                chip.className = `filter-chip ${isSelected ? 'active' : ''}`;
+                chip.setAttribute('data-filter', lang);
+                chip.innerHTML = `${lang} <span style="font-size:0.7rem; opacity:0.6; margin-left:3px;">(${count})</span>`;
+                chipContainer.appendChild(chip);
+            });
+
+            // Set listeners
+            document.querySelectorAll('.filter-chip').forEach(c => {
+                c.addEventListener('click', () => {
+                    activeFilter = c.getAttribute('data-filter');
+                    document.querySelectorAll('.filter-chip').forEach(x => x.classList.remove('active'));
+                    c.classList.add('active');
+                    renderRepos();
+                });
+            });
+        }
+
+        // Filter, sort, and render repositories list
+        function renderRepos() {
+            listContainer.innerHTML = '';
+
+            let filtered = repos.filter(r => {
+                const termMatch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                  (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()));
+                if (!termMatch) return false;
+
+                if (activeFilter === 'all') return true;
+                if (activeFilter === 'Other') return !r.language;
+                return r.language === activeFilter;
+            });
+
+            filtered.sort((a, b) => {
+                if (currentSort === 'updated') return new Date(b.updated_at) - new Date(a.updated_at);
+                if (currentSort === 'name') return a.name.localeCompare(b.name);
+                if (currentSort === 'stars') return b.stargazers_count - a.stargazers_count;
+                return 0;
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding: 40px; color:var(--text-dim);">
+                        <i data-lucide="search" style="width:24px; height:24px; margin-bottom:8px; display:inline-block;"></i>
+                        <p>No matching repositories found.</p>
+                    </div>
+                `;
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+
+            filtered.forEach(r => {
+                const langName = r.language || 'Other';
+                const langColor = LANG_COLORS[r.language] || 'var(--color-other)';
+                const dateStr = new Date(r.updated_at).toLocaleDateString('zh-TW', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                const card = document.createElement('div');
+                card.className = 'repo-tile-item';
+                card.innerHTML = `
+                    <div class="item-title-row">
+                        <a href="${r.html_url}" target="_blank" class="item-title">
+                            <i data-lucide="bookmark" style="width:16px; height:16px;"></i>
+                            ${r.name}
+                        </a>
+                        <span class="item-badge">public</span>
+                    </div>
+                    <p class="item-desc">${r.description || 'No project description.'}</p>
+                    <div class="item-footer">
+                        <span class="item-lang">
+                            <span class="item-lang-dot" style="background-color: ${langColor};"></span>
+                            ${langName}
+                        </span>
+                        <div class="item-stats">
+                            ${r.stargazers_count > 0 ? `
+                                <span class="item-stat"><i data-lucide="star" style="width:12px; height:12px;"></i> ${r.stargazers_count}</span>
+                            ` : ''}
+                            ${r.forks_count > 0 ? `
+                                <span class="item-stat"><i data-lucide="git-fork" style="width:12px; height:12px;"></i> ${r.forks_count}</span>
+                            ` : ''}
+                            <span style="font-family:'Fira Code'; font-size:0.75rem;">${dateStr}</span>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function setupEventListeners() {
+            searchField.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderRepos();
+            });
+
+            sortSelect.addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                renderRepos();
+            });
+        }
+
+        // Terminal logic
+        function setupTerminal() {
+            termInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const cmd = termInput.value.trim().toLowerCase();
+                    termInput.value = '';
+
+                    // Echo command
+                    writeTerminalRow(`$ ${cmd}`, 'cmd');
+
+                    if (!cmd) return;
+
+                    // Execute command
+                    switch(cmd) {
+                        case 'help':
+                            writeTerminalRow("Available Commands:\n - help: display list of commands\n - bio: display user profile biography\n - repos: list all repositories\n - stats: display repository star/fork count\n - clear: clear terminal screen", 'success');
+                            break;
+                        case 'bio':
+                            writeTerminalRow(`Bio: ${document.getElementById('user-bio').textContent}`, 'success');
+                            break;
+                        case 'repos':
+                            const list = repos.map(r => `• ${r.name} (${r.language || 'Other'})`).join('\n');
+                            writeTerminalRow(`Public Repos:\n${list}`, 'success');
+                            break;
+                        case 'stats':
+                            const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+                            const totalForks = repos.reduce((sum, r) => sum + r.forks_count, 0);
+                            writeTerminalRow(`Git Analytics:\n - Total Repos: ${repos.length}\n - Total Stars: ${totalStars}\n - Total Forks: ${totalForks}`, 'success');
+                            break;
+                        case 'clear':
+                            termOutput.innerHTML = '';
+                            break;
+                        default:
+                            writeTerminalRow(`Command not found: '${cmd}'. Type 'help' for command list.`, 'err');
+                    }
+
+                    // Auto scroll to bottom
+                    termOutput.scrollTop = termOutput.scrollHeight;
+                }
+            });
+        }
+
+        function writeTerminalRow(text, type = '') {
+            const row = document.createElement('div');
+            row.className = `terminal-row ${type}`;
+            row.textContent = text;
+            termOutput.appendChild(row);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
